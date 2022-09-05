@@ -1,0 +1,112 @@
+# INFO
+- max 3 igazolatlan lab hianyzas
+- moodle
+
+Témák:
+- logikai jelek
+- boole algebra, logic gates
+- logikai fuggvenyek + specifikalasuk
+- kombinacios halozatok tervezese
+
+# Boole algebra
+A{B, +, \*, ¬} négyes
+- 0, 1
+- logikai változók: A,B,C
+
+- + logikai összeadás, VAGY, OR
+- * logikai szorzás, ÉS, AND
+- ¬ negálás (invertálás, /-el is lehet jelölni)
+
+## Verilog hardver leíró nyelv
+- VAGY: A+B --> A | B
+- ÉS: A\*B --> A & B
+- Inverz: ¬, /, n --> ~A
+
+## Boole algebra axiómái
+> axiómák: igaznak elfogadott állítások
+> axiómákból levezethetők a tételek
+
+### *B* (Boole halmaz) B elemeire:
+- A1: B=0, ha B!=1
+- A1d: B=1, ha B!=0
+
+- A2: ¬0=1
+- A2d: ¬1=0
+
+Konstansokkal végzett műveletek:
+- A3: 0\*0=0
+- A3d: 1+1=1
+
+- A4: 1\*1=1
+- A4d: 0+0=0
+
+- A5: 0\*1 = 1\*0 = 0
+- A5d: 0+1=1+0=1
+
+### Műveletvégzési sorrend(prioritás):
+- () -> ¬ -> * -> +
+- pl: /A\*B+C --> /A --> (/A)\*B --> ((/A)\*B)+C
+- 0 1 és * + egyidejűleg csere --> azonosságok érvényesek maradnak
+- pl: A3 A3d
+
+### Kapuk
+- *bemeneti kombináció*
+- ¬: inverter
+<kep>
+
+### Kapcsolás algebra
+- normál kapcsoló: nyitott(A=0) zárt(A=1)
+- invertáló: nyitott(A=1) zárt(A=0)
+
+## ÉS(AND)
+- hagyományos leírás: F=A\*B (Verilog: assign F = A & B;)
+- sorosan kapcsolt kapcsolók (csak akkor folyik áram, ha minden kapcsoló le van nyomva)
+- kapu: csak akkor ad 1-et ha mind2 bemenetén 1 van
+
+0\*0=0
+0\*1=0
+1\*0=0
+1\*1=1
+
+### Tételek
+- A\*0=0
+- A\*1=A
+- A\*A=A
+- A\*B=B\*A
+
+## VAGY(OR)
+- F = A + B (Verilog: assign F = A | B;)
+- párhuzamosan kapcsolt kapcsolók
+- kapu: ha vmelyik 1 1 lesz az out
+
+0+0=0
+0+1=1
+1+0=1
+1+1=1
+
+- kommutatív (felcserélhető, párhuzamosan kötés sorrendje lényegtelen)
+
+## INVERTÁLÁS
+- A\*/A = 0
+- A+/A = 1
+
+## 2 v több változóra vonatkozó tételek
+> pdf-ben
+- kommutativitás
+- asszociativitás
+- disztributivitás
+
+Elnyelés:
+- T9: B\*(B+C)=B
+- T9d: B+(B\*D)=B
+
+De-Morgan azonosságok!
+
+# Logikai függvények
+- változók: logikai változók
+- literálok: normál(ponált) vagy negált
+- szorzat(Product Term, PT): Önálló literálok ÉS kapcsolatú kifejezéseik
+- Minterm: Olyan szorzat, melyben a **függvény összes változója szerepel** ponált vagy negált értelemben
+- Szorzatösszeg(Sum Of Product, SOP)
+
+

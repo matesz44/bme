@@ -86,3 +86,78 @@ int main(void) {
 
 - string nem törhető
 - preprocinak szolo utasítás (#include) sem törhető
+
+szamologep.c:
+```c
+#include <stdio.h>
+
+int main(void) {
+    printf("Eredmény: %d.\n", 2*3);
+
+    return 0;
+}
+```
+- %d --> egész számok
+
+## Vátozók és használatuk
+- értékadás MINDIG **jobbról balra** történik (x = x+1)
+
+type | ÉK | MŰVELETEK
+egész | -1, 2, 5 | + - összehasonlít
+valós | 1.5, 7, 3.14 | + - összehasonlít
+logikai | igaz, hamis | és, vagy, tagadás
+karakter | betűk, írásjelek | összehasonlít, következő, előző
+szöveg | karaktersorozatok | összefűzés
+
+### Kifejezések és típusok
+
+kifejezés | érték
+1+2 | 3
+5+2\*3 | 11
+6\*(3+4) | 42
+
+1<2 | igaz
+2>=3 | hamis
+'a' < 'b' | igaz
+
+3\*(1+ | vége?
+1-HAMIS | típus!
+1 < X < 5 | típus!
+
+### Változók létrehozása
+- statikusan tipusos (létrehozás után nem változtatható meg)
+- doublet fogjuk használni ált) --> printf("%f", x); scanf("%lf", &x);
+#### definíció (= létrehozás)
+int x = 2; (x egész) (inicializálással)
+int a, b;
+int kerulet, terulet;
+
+#### használat
+x = 3;
+x = 2+3;
+x=x+1;
+
+#### kiírás
+int x;
+x=2\*3;
+printf("Értéke: %d.\n", x); // (x --> érték)
+
+#### beolvasás
+int szam;
+printf("Mennyi? ");
+scanf("%d", &szam); // (&x --> memcim)
+
+
+## Az imperatív programok működése
+- szekvencia: egymás utáni lépések (flowchart)
+<kep-folyamatabra>
+- elágazás: feltételes végrehajtás (C: if(felt))
+
+- % maradék csak egész számoknál működik
+- 0 --> hamis
+- nem 0 --> igaz
+
+### Ciklus: működés
+> *visszaugrás*
+<kep-ciklus>
+- több utasítás {} közé kell

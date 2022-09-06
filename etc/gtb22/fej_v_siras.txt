@@ -1,0 +1,4 @@
+1. dobas: iii
+2. dobas: iif
+3. dobas: iff
+4. dobas: fff (3 db fej -> 4 dobasbol 1-szer (25%))

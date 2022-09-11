@@ -7,7 +7,7 @@ https://infoc.eet.bme.hu
 
 > *1. hét*
 
-- PIROS TOLL KELL!
+- PIROS TOLL KELL! -- OK
 
 # pseudocode
 kiir 1 uj sort kezd
@@ -21,3 +21,4 @@ jegyezd meg a 1 számot
 adj hozzá 1-et                  |
 ha a szám <= 10, újra-----------/
 
+..basic shiet..

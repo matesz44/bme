@@ -1,0 +1,13 @@
+d4 d6 d8 d10 d12 d20 d100
+
+
+scanf: 6d6 + 10d4 (+4 --> ez hozzaadodik az osszeghez)
+getchar();
+
+out:
+4, 3, 1, 6, 6, 5, 1, 2, 2, 1, 3, 4, 3
+sum: 50
+
+- no string
+- no tomb
+- +pont: (+4)

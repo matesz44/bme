@@ -1,0 +1,223 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<blockquote><p><a href="https://infoc.eet.bme.hu">infoc.eet.bme.hu</a></p>
+</blockquote>
+<h1>Nevezetes algoritmusok, tömbök -- Programozás alapjai I. -- 2022.09.12 8.15-10.00</h1>
+<h2>emlekezteto</h2>
+<ul>
+<li>szekvencia 1.2.3. sor/utasitas (egymas utan)</li>
+<li>elagazas (if)</li>
+<li>ciklus (for,while)</li>
+</ul>
+<p>fizzbuzz:
+<ul>
+<li>iffel (szam%3==0 &amp;&amp; szam%5==0) --&gt; fizzbuzz ---&gt; 3-mal(fizz) ---&gt; 5-tel(buzz) ---&gt; szam kiir</li>
+</ul>
+</p>
+<h2>Sorozatok és tételek</h2>
+<p>Programozási tételek:
+<ul>
+<li>általánosságban megfogalmazott algoritmusok, mindig kicsit átalakítjuk a feladathoz</li>
+</ul>
+</p>
+<p>Sorozatok:
+<ul>
+<li>Az elemszám 2-féleképp lehet adott</li>
+<li>adott hossz (előre adott, pl:4 elem: 9,1,3,5)</li>
+<li>végjeles (a sorozat végét egy spec jel jelöli (1,3,4,-1)</li>
+</ul>
+</p>
+<p>Hogyan olvassuk be egy végjeles sorozatot?</p>
+<pre><code>BE: szám &lt;-- első
+CIKLUS AMÍG szám!= -1, ADDIG
+    szám feldolgozása
+    BE: szám &lt;-- többi
+CIKLUS VÉGE
+</code></pre>
+<ul>
+<li>ciklus végén beolvasás</li>
+</ul>
+<h3>Összegzés tétele</h3>
+<blockquote><p>program, ami összegzi a fogyasztásunkat: felhasználótól kapott + egész számokat ad össze, amíg -1-et nem kap.</p>
+</blockquote>
+<pre><code>összeg = 0
+CIKLUS AMÍG van még szám, ADDIG
+    szám = következő
+    összeg = összeg + szám
+CIKLUS VÉGE
+KI: összeg
+</code></pre>
+<pre><code>scanf(&quot;%d&quot;, &amp;szam);
+int osszeg = 0;
+while (szam != -1) {
+    osszeg+=szam;
+    scanf(&quot;%d&quot;, &amp;szam);
+    scanf(&quot;%d&quot;, &amp;szam);
+}
+printf(&quot;%d\n&quot;, osszeg);
+</code></pre>
+<h3>Számlálás tétele: osztók száma</h3>
+<blockquote><p>Számoljuk meg, egy sz-nak hány osztója van (1 és maga is)</p>
+</blockquote>
+<pre><code>db=0
+CIKLUS AMÍG van még adat, ADDIG
+    szám = következő elem
+    HA igaz a feltétel adat-ra, AKKOR
+        db = db +1
+    FELTÉTEL VÉGE
+CIKLUS VÉGE
+KI: db
+</code></pre>
+<pre><code>scanf szam
+int db=0;
+for 1..szam
+    if (szam % oszto == 0)
+        db+=1;
+printf darab
+</code></pre>
+<h2>A karakter típus -- feladat (char) - 1 byte a mérete</h2>
+<blockquote><p>Számoljuk meg, a begépelt szövegben hány "e" betű van!</p>
+</blockquote>
+<p>Karakterek(character):
+<ul>
+<li>betű --&gt; kódszám hozzárendelés</li>
+<li>A gépnek szám: belső ábrázolás, nekünk betű: külső ábrázolás</li>
+<li>pl: A-&gt;65, a-&gt;97, !-&gt;33, 0-&gt;48, de vezérlő kódok is: \n (sortörés), oldaltörés</li>
+<li>Nem kell tudni fejből</li>
+<li>A szjegyek és a betűk sorban vannak</li>
+</ul>
+</p>
+<pre><code>man ascii
+</code></pre>
+<h3>Karakterek kezelése C-ben</h3>
+<pre><code>char betu;
+betu = 'A';
+betu +=1;
+x = 'c' - 'a'; (táv: 2, mert a-&gt;b-&gt;c)
+</code></pre>
+<p>nagybetűvé:
+<ul>
+<li>betu = betu-'a'+'A';</li>
+</ul>
+</p>
+<ul>
+<li>1 char mindig belefér az int-be</li>
+</ul>
+<h3>Karakter beolvasása és fájl vége jel</h3>
+<pre><code>char c;
+int sikeresen = scanf(&quot;%c%, &amp;c);
+if (sikeresen == 1) { // sikeresen != EOF
+    printf(&quot;Beolvasva %c, karakterkód: %d&quot;, c, c);
+} else {
+    printf(&quot;Fájl vége jel, nincs char beolvasva.&quot;)
+}
+</code></pre>
+<ul>
+<li>EOF jel billentyűn: <ctrl>+d</li>
+</ul>
+<h2>Szélsőérték keresése: a leg...</h2>
+<blockquote><p>olvassuk be a rakéták magasságát! Hány db-ot? Kérdezzük meg a felhasználótól! Melyik volt a legnagyobb?</p>
+</blockquote>
+<pre><code>legnagyobb = elso elem
+CIKLUS AMÍG van még szám, ADDIG
+    szám = következő elem
+    HA szám &gt; legnagyobb, AKKOR
+        legnagyobb = szám
+    FELTÉTEL VÉGE
+CIKLUS VÉGE
+KI: legnagyobb
+</code></pre>
+<ul>
+<li>max = elso adat fontos, mert lehet negativ szamsor is es igy a 0 elbassza</li>
+</ul>
+<h2>Eldöntés tétele</h2>
+<blockquote><p>Szerepel-e a keresett dolog a sorozatban.</p>
+</blockquote>
+<ul>
+<li>prím-e? --&gt; amint van osztó, nem prim</li>
+</ul>
+<pre><code>talalat = HAMIS
+CIKLUS AMÍG van elem ÉS NEM talalat
+    szam = következő elem
+    HA szam = keresett, AKKOR
+        talalat = IGAZ
+    FELTÉTEL VÉGE
+CIKLUS VÉGE
+KI: talalat
+</code></pre>
+<h3>logikai tipus a C-ben</h3>
+<blockquote><p>IGAZ,HAMIS, és, vagy, tagadás</p>
+</blockquote>
+<ul>
+<li>neve: bool, i:true, h:false</li>
+</ul>
+<blockquote><p><code>#include &lt;stdbool.h&gt;</code> kell a bool type miatt</p>
+</blockquote>
+<ul>
+<li>eldöntés: prím-e</li>
+</ul>
+<h1>Tömbök</h1>
+<blockquote><p>kérjünk be 10 számot, és utána írjuk ki őket fordított sorrendben</p>
+</blockquote>
+<ul>
+<li><p>NEM sorminta</p>
+</li>
+<li><p>egyforma típusú változókból áll, fix méretű tároló (container) (nem lehet utólag megnövelni)</p>
+</li>
+<li><p>elemek sorszámozva (indexelhetőek)</p>
+</li>
+</ul>
+<p>Szóhasználat:
+<ul>
+<li>tömb más néven: vektor (vector)</li>
+<li>Egyszerű/beépített adattípusok: egész, valós, karakter, ...</li>
+<li>Összetett/származtatott adattípus: tömb(több egészből)</li>
+</ul>
+</p>
+<p>Létrehozás:
+<ul>
+<li><code>&lt;type&gt; &lt;name&gt;[&lt;size&gt;]</code></li>
+<li><code>double t[5] = {9.3, 7.5, 3.7, 0, 4.2};</code></li>
+<li>int tomb[10];</li>
+<li>ha nincs kezdőérték, akkor memóriaszemét lesz benne (tomb valtozo)</li>
+<li><code>double t[5] = {9.3, 7.5};</code></li>
+<li>ha mar van megadva elem, minden többi elem 0-lesz</li>
+<li><code>int t[100] = {0};</code> elso elem 0 tobbi mindig 0</li>
+</ul>
+</p>
+<h2>Hogyan NE</h2>
+<ul>
+<li>tömb elemeit csak egyenként lehet kezelni</li>
+<li>ciklussal elemenként másolunk (for)</li>
+<li>méretet meg kell adni mindig (akár scanf-fel (c99 ota), de ezzel ovatosan)</li>
+</ul>
+<h2>Feladatok</h2>
+<ul>
+<li>10 db szám és fordítva</li>
+<li>tömb masolasa (for)</li>
+<li>elemek összegzése</li>
+</ul>
+<h3>Tételek: kiválogatás 2 tömbbe</h3>
+<blockquote><p>Párosak egyikbe, páratlanok másikba</p>
+</blockquote>
+<pre><code>int szamok[20] = {3, -2...};
+int prs[20], prtln[20];
+int db_prs = 0, db_prtln=0;
+- for 0..20
+    - if sz %2==0
+        prs[db_prs]=sz[i];
+        db_prs++;
+    - else
+        prtln ...
+</code></pre>
+<ul>
+<li>összeg, keresés, szélsőértékhez nem kell tömb</li>
+</ul>
+<h1>Kis kitérő: álvéletlenszámok</h1>
+<ul>
+<li><code>stdlib.h</code>, <code>time.h</code></li>
+<li>rand() --&gt; 0..RANDMAX &gt;= 32767</li>
+<li>srand(time(0)) -- csak 1-szer</li>
+<li>rand()%6+1 (1..6)</li>
+</ul>

@@ -1,0 +1,167 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<h1>-- Függvények, struktúrák -- 2022.09.19 -- Q/I --</h1>
+<ul>
+<li>hátultesztelős ciklus (do while)</li>
+<li>ciklusbol kitores: break</li>
+<li>következő loopra lépés: continue</li>
+</ul>
+<h2>Esetszétválasztás (switch)</h2>
+<ul>
+<li>if, else if agak kivaltasa</li>
+<li>OR: case 'I': case 'i': ...; break;</li>
+</ul>
+<h1>Függvények</h1>
+<blockquote><p><code>ret_type name(param_type1, param_type2) {definition}</code>
+<code>bool prim_e(int szam) {...}</code></p>
+</blockquote>
+<ul>
+<li>fv definicio</li>
+<li>fv törzs</li>
+<li>fv paraméterei</li>
+<li>{global,local} varok: lathatosag, elettartam (fv-en {kivul,belul})</li>
+<li>erdekes: void type</li>
+<li>top-down tervezés</li>
+</ul>
+<h2>Fv-ek paraméterei:</h2>
+<blockquote><p><em>az aktuális paraméterekkel kitöltődnek a fv-ek formális paraméterei</em></p>
+</blockquote>
+<ul>
+<li>formális paraméterek (definicioban)</li>
+<li>aktuális paraméterek ((arguments)amikor meghívjuk a fv-t és adott értéket adunk meg neki)</li>
+</ul>
+<h2>Deklarációk, definíciók</h2>
+<ul>
+<li>deklaráció main elé</li>
+<li>definíció main után</li>
+</ul>
+<h3>Alprogramok = szubrutinok = fv-ek</h3>
+<pre><code>double negyzet(double x) {
+    return x * x;
+}
+int main(void) {
+    printf(&quot;%f&quot;, negyzet(2.3));
+    return 0;
+}
+</code></pre>
+<p>Ez a proginkban használva:</p>
+<pre><code>if (--sz egy prim--)
+    db++;
+--&gt;
+if (prim_e(sz))
+    db++;
+</code></pre>
+<ul>
+<li><code>&lt;prim2.c&gt;</code></li>
+</ul>
+<h3>Prímszámok 2-től 1000-ig</h3>
+<p>Számlálás T:</p>
+<pre><code>int db = 0;
+int sz;
+for (sz = 2; sz &lt;= 1000; sz++)
+    if (--sz egy prim--)
+        db++;
+</code></pre>
+<p>Eldöntés T:</p>
+<pre><code>bool van = false;
+int oszt = 2;
+while (oszt &lt; sz &amp;&amp; !van) {
+    if (sz % oszt == 0)
+        van = true;
+}
+</code></pre>
+<p>Teljes mo:</p>
+<pre><code>int sz, db;
+
+db = 0;
+for (sz = 2; sz &lt;= 1000; sz++) {
+    bool van = false;
+    int oszt = 2;
+    while (oszt &lt; sz &amp;&amp; !van) {
+        if (sz % oszt == 0)
+            van = true;
+        oszt++;
+    }
+    if (!van)
+        db++;
+}
+printf(&quot;%d prím.\n&quot;, db);
+</code></pre>
+<ul>
+<li><code>&lt;prim.c&gt;</code></li>
+</ul>
+<h3>Függvényhívás menete, faktoriális</h3>
+<blockquote><p>infoc oldalon</p>
+</blockquote>
+<h2>Styling</h2>
+<ul>
+<li>ne csinaljunk 1 soros fv-ben extra valtozot csak returnoljunk</li>
+<li>ha logikai erteket adunk vissza nem kell belerakni egy ifbe mert az cancer</li>
+</ul>
+<pre><code>int lnko(int a, int b) {
+    while (b != 0) {
+        int t = b;
+        b = a%b;
+        a = t;
+    }
+    return a;
+}
+</code></pre>
+<h1>Struktúrák</h1>
+<blockquote><p><em>összetartó adatok</em></p>
+</blockquote>
+<pre><code>typedef struct Tort {
+    int szaml, nev;
+} Tort;
+
+Tort a, b, c, d, x;
+x = szorzat(osszeg(a, b), osszeg(c, d));
+</code></pre>
+<p>definicio szintaxis:</p>
+<pre><code>struct név {
+    type type_name, type_name2, ...;
+    type2 type_name3;
+    ...
+};
+
+struct Tort {
+    int szaml, nev;
+};
+struct Tort t1, t2;
+</code></pre>
+<p>Adatokra hivatkozás:</p>
+<pre><code>struct Tort t1;
+t1.szaml = 3;
+t1.nev = 4;
+printf(&quot;t1 tört: %d/%d&quot;, t1.szaml, t1.nev);
+</code></pre>
+<p>typedef kulcsszó:
+<ul>
+<li>typedef int Egesz; Egesz x;</li>
+<li>typedef char Betu; Betu b;</li>
+</ul>
+</p>
+<h2>Struct kezdeti értékek</h2>
+<p>Struktúrák inicializálása:</p>
+<pre><code>typedef struct Pont {
+    double x, y;
+}; Pont;
+
+Pont p1 = {2, 5}; //p.x=2, p.y=5
+</code></pre>
+<p>Struktúra típusú literális:</p>
+<pre><code>Pont p2 = { .x = 2, .y = 5 }; // inicializálás
+
+// értékadások
+p2 = (Pont) {2, 5};
+p2 = (Pont) { .x=2, .y=5 };
+</code></pre>
+<h3>Többszörösen összetett adatok</h3>
+<ul>
+<li>Struct-ban tömbök</li>
+<li><p>Tömbben structok</p>
+</li>
+<li><p>Szövegek = karaktertömb ( %s )</p>
+</li>
+</ul>

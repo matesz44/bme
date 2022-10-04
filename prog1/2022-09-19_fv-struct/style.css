@@ -1,0 +1,20 @@
+a:link {color:#9cf}
+a:visited {color:#c9f}
+a:hover, a:visited:hover {color:#f00}
+blockquote {padding-left: 1em;border-left: 3px solid #fff}
+pre,code {overflow: auto;background:#555}
+pre {border: 1px solid #069}
+h1,h2,h3,h4,h5,h6 {line-height:1;text-decoration:underline}
+#nav li {list-style: none}
+img {max-width: 100%}
+.right {float: right}
+
+body{
+    color:#fff;
+    background:#000;
+    margin:1em auto;
+    max-width:40em;
+    padding:0 .62em;
+    font:1.2em/1.62 sans-serif;
+    overflow-wrap: break-word;
+}

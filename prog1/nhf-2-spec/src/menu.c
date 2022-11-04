@@ -11,7 +11,7 @@ int input_shell() {
 
         if (input[0] == 'q')
             return 0;
-        else
+        else if (cmd == 0)
             printf("Hibas input, probalja ujra\n> ");
     }
     return cmd;

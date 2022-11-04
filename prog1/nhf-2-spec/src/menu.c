@@ -3,16 +3,18 @@
 #include "menu.h"
 
 int input_shell() {
-    char cmd;
-    scanf(" %c", &cmd);
-    while ((cmd < '0' || cmd > '9') && cmd != 'q') {
-        printf("Helytelen input, adja meg mégegyszer amit szeretne...\n> ");
-        scanf(" %c", &cmd);
-    }
-    if (tolower(cmd) == 'q')
-        return 0;
+    char input[10];
+    int cmd = 0;
+    while (cmd == 0) {
+        scanf("%s", input);
+        sscanf(input, "%d", &cmd);
 
-    return cmd-'0';
+        if (input[0] == 'q')
+            return 0;
+        else
+            printf("Hibas input, probalja ujra\n> ");
+    }
+    return cmd;
 }
 
 int menu(char* s) {
@@ -23,25 +25,35 @@ int menu(char* s) {
 }
 
 int mainmenu(void) {
-    int next=1, menulevel = 1, id;
+    int next=1, menulevel = 1, id=0, prev=0;
 
     while (next != 0 || menulevel != 0) {
         // debug: printf("%d | %d\n", next, menulevel);
-        switch (menulevel) {
-            case 1: next = menu("TELEFONKONYV - BN8QZW\n"
-                                "[1] UJ\n"
-                                "[2] LISTAZ\n"
-                                "[3] SZERKESZT\n"
-                                "[4] TOROL\n"
-                                "[5] KERES\n"
-                                "[6] EXPORT\n"
-                                "");
-                            next ? menulevel++ : menulevel--;
-                            break;
+        if (id != 0) { // szerkesztes
+            printf("%d. rekord %d. entry-enek szerkesztese\n", id, next);
+            printf("record_edit_entry(id:%d);\n", id);
+            id = 0;
+        }
 
+        switch (menulevel) {
+            // mainmenu - menulevel = 1
+            case 1: 
+                next = menu("TELEFONKONYV - BN8QZW\n"
+                            "[1] UJ\n"
+                            "[2] LISTAZ\n"
+                            "[3] SZERKESZT\n"
+                            "[4] TOROL\n"
+                            "[5] KERES\n"
+                            "[6] EXPORT\n"
+                            "");
+                next ? menulevel++ : menulevel--;
+                break;
+
+            // mainmenubol valasztott almenu - menulevel = 2
             case 2:
                 switch (next) {
-                    case 1: next = menu("\n"
+                    case 1: prev = next;
+                            next = menu("\n"
                                    "[1] MANUALISAN BEIR\n"
                                    "[2] VCARD IMPORT\n"
                                    "[3] CSV (adatbazis) IMPORT (mostani adatbazis filehoz iras)\n"
@@ -49,18 +61,22 @@ int mainmenu(void) {
                             next ? menulevel++ : menulevel--;
                             break;
                     case 2: // LIST EVERY ENTRY IN DB IN SHORT FORMAT (NEV, TELSZAM, EMAIL)
-                            next = menu(/*db_show_short();*/"list_db\n");
+                            prev = next;
+                            next = menu(/*db_show_short();*/"list_db\n[1]...\n[2]...\n[3]...");
                             next ? menulevel++ : menulevel--;
                             break;
-                    case 3: printf("Melyik rekord legyen szerkesztve?\n> ");
+                    case 3: prev = next;
+                            printf("Melyik rekord legyen szerkesztve?\n> ");
                             next = input_shell();
                             next ? menulevel++ : menulevel--;
                             break;
-                    case 4: printf("Melyik rekord legyen torolve?\n> ");
+                    case 4: prev = next;
+                            printf("Melyik rekord legyen torolve?\n> ");
                             next = input_shell();
                             next ? menulevel++ : menulevel--;
                             break;
-                    case 5: printf("Mi szerint keres?\n");
+                    case 5: prev = next;
+                            printf("Mi szerint keres?\n");
                             next = menu(""
                                         "[1] NEV\n"
                                         "[2] TELEFONSZAM\n"
@@ -68,33 +84,78 @@ int mainmenu(void) {
                                         "");
                             next ? menulevel++ : menulevel--;
                             break;
-                    case 6: printf("Mi legyen a .vcf file neve?\n> ");
-                            //record_export_vcf();
-                            printf("<file.vcf> SIKERESEN LETREHOZVA / NEM SIKERULT!\n");
+                    case 6:
+                            printf("Melyik rekordot?\n> ");
+                            next = input_shell();
+                            printf("Mi legyen a .vcf file neve?\n> ");
+                            char fname[254+1];
+                            scanf("%s", fname);
+                            printf("record_export_vcf(%s,%d);", fname, next);
+                            printf("<%s.vcf> SIKERESEN LETREHOZVA a %d. rekordbol / NEM SIKERULT!\n", fname, next);
                             next = 0;
-                            next ? menulevel++ : menulevel--;
+                            menulevel--;
                             break;
                 }
                 break;
 
+            // almenu VALAMELYIKEBOL valasztott almenu - menulevel = 3 !FIGYELNI KELL A prev-et, hogy tudjuk melyik menubol valaszottunk szamot
             case 3:
-                switch(next) {
-                    case 1:
-                        //record_soronkentIn();
+                switch (prev) {
+                    case 1: // masodik almenubol ELSO 
+                        switch(next) {
+                            case 1: // rekord bekerese soronkent --> 1 1
+                                    printf("record_soronkentIn();\n");
+                                    // soronkent bekeres, uj sorkent db-be adas
+                                    menulevel--;
+                                    break;
+                            case 2: // vcard import --> 1 2
+                                    printf("import_from_vcard();\n");
+                                    // vcard filenev bekeres, (syntax check), ha van uj sorkent db-be, ha nincs warning, filenev ujra bekerese, q-kilep
+                                    next = 1; // uj menube vissza, ha ez nincs instant listazni fog
+                                    menulevel--;
+                                    break;
+                            case 3:
+                                    printf("import_from_csv();\n");
+                                    // csv file bekeres, (syntax check), ha van es egyeznek a fejlecek catolja a mostani db vegere az osszeset, ha nincs warning, filenev ujra bekerese, q-kilep
+                                    next = 1;
+                                    menulevel--;
+                                    break;
+                            default: printf("Ilyen menupont nem letezik\n");
+                                     next = 1;
+                                     menulevel--;
+                                     break;
+                        }
                         break;
-                    case 2:
-                        //record_show_all();
-                        break;
-                    case 3: id = next;
-                            printf("A rekord melyik adatát?\n> ");
-                            next = input_shell();
+
+                    case 2: // listaz
+                            printf("record_show_all(%d); // %d. sor a db_filebol\n", next, next);
+                            menulevel-=2;
                             break;
-                    case 4: 
+                    case 3: // szerkeszt -> <record_id> -> melyik  --> 3 n 
+                            id = next;
+                            printf("A rekord melyik adatat?\n");
+                            next = menu(""
+                                        "[1] NEV\n"
+                                        "[2] FOGLALKOZAS\n"
+                                        "[3] CIM\n"
+                                        "[4] TELEFONSZAM\n"
+                                        "[5] EMAIL\n"
+                                        "");
+                            menulevel-=2;
+                            break;
+                    case 4: // torles -> i/n --> 4 1/2
                             id = next;
                             printf("Tenyleg szeretne torolni a %d. rekordot?\n", id);
-                            next = menu("[1] IGEN\n[2] NEM\n");
+                            next = menu("[1] IGEN, BIZTOS\n");
+                            if (next == 1) {
+                                printf("record_delete(%d);\n", id);
+                                menulevel--;
+                            }
+                            next = 4;
+                            menulevel--;
                             break;
-                    case 5:
+                    case 5: // keres -> mi szerint -> keres_by_xyz("txt") --> 5 1-3 <szoveg>
+                            break;
 
 
                 }

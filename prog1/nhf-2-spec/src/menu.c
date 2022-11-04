@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <ctype.h>
 #include "menu.h"
 
 int input_shell() {
@@ -62,7 +60,7 @@ int mainmenu(void) {
                             break;
                     case 2: // LIST EVERY ENTRY IN DB IN SHORT FORMAT (NEV, TELSZAM, EMAIL)
                             prev = next;
-                            next = menu(/*db_show_short();*/"list_db\n[1]...\n[2]...\n[3]...");
+                            next = menu(/*db_show_short();*/"list_db\n[1]...\n[2]...\n[3]...\n");
                             next ? menulevel++ : menulevel--;
                             break;
                     case 3: prev = next;
@@ -129,6 +127,7 @@ int mainmenu(void) {
 
                     case 2: // listaz
                             printf("record_show_all(%d); // %d. sor a db_filebol\n", next, next);
+                            next = prev;
                             menulevel-=2;
                             break;
                     case 3: // szerkeszt -> <record_id> -> melyik  --> 3 n 
@@ -167,4 +166,3 @@ int mainmenu(void) {
 
     return 0;
 }
-

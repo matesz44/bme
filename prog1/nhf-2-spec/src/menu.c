@@ -5,13 +5,13 @@
 int input_shell() {
     char input[10];
     int cmd = 0;
-    while (cmd == 0) {
+    while (!cmd) {
         scanf("%s", input);
         sscanf(input, "%d", &cmd);
 
         if (input[0] == 'q')
             return 0;
-        else if (cmd == 0)
+        else if (!cmd)
             printf("Hibas input, probalja ujra\n> ");
     }
     return cmd;

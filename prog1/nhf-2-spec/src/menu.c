@@ -1,4 +1,11 @@
+#include <stdlib.h>
 #include "menu.h"
+#include "adatbazis.h"
+
+DB_t db[] = { 
+    {"name", "title", "adr", "tel", "email@email.com"},
+    {"test1N", "test1T", "test1ADR", "test1TEL", "test1EMAIL"}
+};
 
 int input_shell() {
     char input[10];
@@ -23,14 +30,15 @@ int menu(char* s) {
 }
 
 int mainmenu(void) {
-    int next=1, menulevel = 1, id=0, prev=0;
+    int next=1, menulevel = 1, id=0, prev=0, torol=0;
 
     while (next != 0 || menulevel != 0) {
         // debug: printf("%d | %d\n", next, menulevel);
         if (id != 0) { // szerkesztes
             printf("%d. rekord %d. entry-enek szerkesztese\n", id, next);
-            printf("record_edit_entry(id:%d);\n", id);
+            printf("record_edit_entry(%d, %d);\n", id, next);
             id = 0;
+            next = 3;
         }
 
         switch (menulevel) {
@@ -60,8 +68,8 @@ int mainmenu(void) {
                             break;
                     case 2: // LIST EVERY ENTRY IN DB IN SHORT FORMAT (NEV, TELSZAM, EMAIL)
                             prev = next;
-                            next = menu(/*db_show_short();*/"list_db\n[1]...\n[2]...\n[3]...\n");
-                            next ? menulevel++ : menulevel--;
+                            db_show_short(db, 2);
+                            menulevel++;
                             break;
                     case 3: prev = next;
                             printf("Melyik rekord legyen szerkesztve?\n> ");
@@ -126,9 +134,12 @@ int mainmenu(void) {
                         break;
 
                     case 2: // listaz
-                            printf("record_show_all(%d); // %d. sor a db_filebol\n", next, next);
-                            next = prev;
-                            menulevel-=2;
+                            next = menu("Rekord reszletes kiirasa\n");
+                            if (next == 0) {
+                                menulevel-=2;
+                            } else {
+                                printf("record_show_all(%d); // %d. sor a db_filebol\n", next, next);
+                            }
                             break;
                     case 3: // szerkeszt -> <record_id> -> melyik  --> 3 n 
                             id = next;
@@ -143,26 +154,25 @@ int mainmenu(void) {
                             menulevel-=2;
                             break;
                     case 4: // torles -> i/n --> 4 1/2
-                            id = next;
-                            printf("Tenyleg szeretne torolni a %d. rekordot?\n", id);
+                            torol = next;
+                            printf("Tenyleg szeretne torolni a %d. rekordot?\n", torol);
                             next = menu("[1] IGEN, BIZTOS\n");
                             if (next == 1) {
-                                printf("record_delete(%d);\n", id);
+                                printf("record_delete(%d);\n", torol);
                                 menulevel--;
                             }
                             next = 4;
                             menulevel--;
                             break;
                     case 5: // keres -> mi szerint -> keres_by_xyz("txt") --> 5 1-3 <szoveg>
+                            next = 5;
+                            menulevel--;
                             break;
-
-
                 }
                 break;
 
         }
     }
                        
-
     return 0;
 }

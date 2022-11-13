@@ -3,8 +3,9 @@
 // csv file 1. sor:
 // N, TITLE, ADR, TEL, EMAIL
 // --1. rekord(2. sor)--
-// nev1, title1, adr1, tel1, email1
+// nev2, title1, adr1, tel1, email1
 
+// adatbazisfile struktura (ebbe lesznek betoltve a db filebol az egyes sorok
 typedef struct DB_t {
     char *N;
     char *TITLE;

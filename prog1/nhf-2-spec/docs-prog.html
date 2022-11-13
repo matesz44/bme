@@ -1,0 +1,109 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<blockquote><p>Telefonköny -- BN8QZW</p>
+</blockquote>
+<h1>Programozói Dokumentáció</h1>
+<p>Szükséges környezet: <em>C fordító</em>, <em>debugmalloc.h</em></p>
+<h2>Fordítás</h2>
+<pre><code>gcc main.c adatbazis.c menu.c record.c vcard.c -o telkonyv
+</code></pre>
+<h2>A project felépítése</h2>
+<pre><code>src
+├── adatbazis.c
+├── adatbazis.h
+├── debugmalloc.h
+├── main.c
+├── menu.c
+├── menu.h
+├── record.c
+├── record.h
+├── vcard.c
+└── vcard.h
+</code></pre>
+<h3>debugmalloc.h</h3>
+<ul>
+<li>memóriakezelést segítő könyvtár</li>
+</ul>
+<h3>adatbazis.h</h3>
+<ul>
+<li>adatbáziskezelés (.csv file) (félkészként egy struktúraként <code>menu.c</code>-ben megadva)</li>
+<li><code>DB_t</code>: adatbázis struct, mely tartalmazza a tárolt adatokat az egyes személyekről</li>
+</ul>
+<h3>adatbazis.c</h3>
+<h4><code>void db_show_short(DB_t *db, int meret)</code></h4>
+<blockquote><p>PARAMÉTEREK: Egy <strong>struktúrát</strong> és egy <strong>méretet</strong> kap paraméterként.</p>
+</blockquote>
+<blockquote><p>KIMENET: <strong>void</strong></p>
+</blockquote>
+<p>Ezen a struktúrán meret sorig végigmegy és
+kiírja a <strong><em>legfontosabb adatokat röviden</em></strong>.</p>
+<p>Ezek a <strong>Név</strong>, <strong>Telefonszám</strong>, és <strong>Email</strong> az adatbázis egyes soraiból.</p>
+<h3>menu.h</h3>
+<ul>
+<li>a main függvényben hívott menürendszer kezelése több almenüvel.</li>
+<li>ezekben az almenükben hívódnak meg az egyes függvények (pl: <code>db_show_short</code>).</li>
+</ul>
+<h3>menu.c</h3>
+<ul>
+<li><code>DB_t db[]</code>: a félkész változatban ebben a fileban van az <strong>adatbázis struktúra</strong>, mely <strong>stringekből</strong> áll</li>
+</ul>
+<h4><code>int input_shell(void)</code></h4>
+<blockquote><p>PARAMÉTEREK: void</p>
+</blockquote>
+<blockquote><p>KIMENET: int</p>
+</blockquote>
+<p>A program shelljeként működik, a bemenetkezelés és rossz bemenet 
+esetén a felhasználó figyelmeztetése, és a bekérés újrapróbálása a feladata.</p>
+<p>Helyes bemenet (q, 1-n) esetén a beírt számot adja vissza (q-nál 0-át a visszalépéshez).</p>
+<h4><code>int menu(char* s)</code></h4>
+<blockquote><p>PARAMÉTEREK: <strong>string</strong> (menü szövege)</p>
+</blockquote>
+<blockquote><p>KIMENET: <strong>int</strong> <code>input_shell</code> függvény kimenete</p>
+</blockquote>
+<p>Az <code>input_shell</code> függvényhez egy kiegészítő, mely egy stringet vár paraméterként,
+ezt kiírja és a kilép lehetőséget, majd meghívja az <code>input_shell</code> függvényt 
+a bemenet helyes lekezeléséért.</p>
+<h4><code>int mainmenu(void)</code></h4>
+<blockquote><p>PARAMÉTEREK: void</p>
+</blockquote>
+<blockquote><p>KIMENET: <strong>int</strong> 0 esetén kilép a program</p>
+</blockquote>
+<p>A program fő függvénye, amiben a többszintes menürendszer van implementálva.</p>
+<p>Ebben a függvényben hívódik meg a <code>menu</code> függvény különböző paraméterekkel,
+hogy a következő lépést a menüben tudja a program.
+Ha a <code>next</code> és a <code>menulevel</code>(menümélység) változó elérnek egy adott szintet,
+meghívódnak a program különböző függvényei (pl: <code>db_show_short(db, 2);</code>)</p>
+<ul>
+<li><code>next</code>: a menüben választott menüpont(szám), amire a következő loopban lépni fog a program.</li>
+<li><code>menulevel</code>: segédváltozó a <code>next</code>-hez, hogy tudja a program, milyen mélyen van a menüben.</li>
+<li><code>prev</code>: segédváltozó a <code>next</code>, és <code>menulevel</code>-hez, hogy tudjuk melyik menüből volt választva az egyes almenü.</li>
+<li><code>id</code>: segédváltozó, (<code>id</code>.)rekord egyes (<code>next</code>.)entry-ének szerkesztéshez.</li>
+<li><code>torol</code>: segédváltozó, rekord törléshez, hogy tényleg szeretné-e törölni azt az adott rekorodot a user.</li>
+</ul>
+<p>Ha az id változónak <code>nem 0</code> érték van adva, az azt jelenti, hogy az <code>id</code>. rekord <code>next</code>. entry-ének szerkesztése folyamatban van.</p>
+<h3>record.h</h3>
+<ul>
+<li>egyes rekordokhoz <code>db[n]</code> tartozó függvények (pl egy db rekord minden adatának kiírása)</li>
+</ul>
+<h3>record.c</h3>
+<h4><code>void record_show_all(DB_t record)</code></h4>
+<blockquote><p>PARAMÉTEREK: <strong>DB<em></em></strong> adatbázis struktúra <strong>egy rekordja</strong></p>
+</blockquote>
+<blockquote><p>KIMENET: void</p>
+</blockquote>
+<p>Egy adott sort(rekordot) kap meg az adatbázisból, melynek minden entry-ét kiírja.
+Egy alap hibakezelést tartalmaz, ha record első entry-je (Név) nem létezik,
+hibát dob nem létező rekordra hivatkozva.</p>
+<h3>vcard.h</h3>
+<ul>
+<li>a vcard formátum előállításához használandó függvényeket tartalmazza</li>
+</ul>
+<h3>vcard.c</h3>
+<h4><code>char* vcard_convert(DB_t record)</code></h4>
+<blockquote><p>PARAMÉTEREK: <strong>DB<em></em></strong> adatbázis struktúra <strong>egy rekordja</strong></p>
+</blockquote>
+<blockquote><p>KIMENET: <strong>string</strong> vcard formázott rekord</p>
+</blockquote>
+<p>Egy adott sort(rekorodot) kap paraméterként és ezt vcard formátumúvá alakítja.</p>
+<p>Egy stringet ad vissza, amelyet egy fileíró függvény megkaphat paraméterként egy filenévvel és elkészíthétő a vcard export.</p>

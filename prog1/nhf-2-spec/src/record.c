@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// az adatbazisfile 1 adott sorat kapja meg, es ebbol az osszes adatot kiirja formazva
 void record_show_all(DB_t record) {
     if (record.N == NULL)
         printf("Nem létezik ilyen sorszámú rekord!\n");

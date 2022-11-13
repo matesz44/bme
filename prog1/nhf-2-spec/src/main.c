@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "debugmalloc.h"
 
 int main(void) {
     while (mainmenu() != 0);

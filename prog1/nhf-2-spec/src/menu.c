@@ -1,13 +1,22 @@
 #include <stdlib.h>
 #include "menu.h"
-#include "adatbazis.h"
 
+#include "vcard.h"
+
+// test db (amig nincs megoldva filebol a csv olvasas
 DB_t db[] = { 
     {"name", "title", "adr", "tel", "email@email.com"},
     {"test1N", "test1T", "test1ADR", "test1TEL", "test1EMAIL"}
 };
 
-int input_shell() {
+/*
+ * A program "shell"-je,
+ * Ha q-t kap                   --> 0-t returnol
+ * Ha szamot, nem 0-t kap       --> returnoli a megadott szamot
+ * Ha nem szamot kap vagy 0-t   --> Hibas inputkent erzekeli,
+ * ujra bekeri a parancs szamat.
+*/
+int input_shell(void) {
     char input[10];
     int cmd = 0;
     while (!cmd) {
@@ -22,13 +31,25 @@ int input_shell() {
     return cmd;
 }
 
+/*
+ * Wrapper az input_shell() fuggvenyhez,
+ * Egy stringet kap, menupontokbol,
+ * ezutan az input_shell() fv-t hivja meg, es ennek a kimenetet returnoli.
+*/
 int menu(char* s) {
-    printf("%s", s);
+    printf("%s\n", s);
     printf("[q] KILEP\n> ");
 
     return input_shell();
 }
 
+/*
+ * A program fo fuggvenye, a FOMENU
+ * Egy tobb szintes menurendszer, ami a menu() es input_shell() fv-eket hasznalja,
+ * a kovetkezo menupontra lepeshez
+ * Itt hivodnak meg egyes menupontokon belul a kivalasztott rekordokra a kulonbozo fuggvenyek
+ * pl: vcard export az n. sorra az adatbazisbol
+*/
 int mainmenu(void) {
     int next=1, menulevel = 1, id=0, prev=0, torol=0;
 
@@ -50,8 +71,7 @@ int mainmenu(void) {
                             "[3] SZERKESZT\n"
                             "[4] TOROL\n"
                             "[5] KERES\n"
-                            "[6] EXPORT\n"
-                            "");
+                            "[6] EXPORT");
                 next ? menulevel++ : menulevel--;
                 break;
 
@@ -59,11 +79,9 @@ int mainmenu(void) {
             case 2:
                 switch (next) {
                     case 1: prev = next;
-                            next = menu("\n"
-                                   "[1] MANUALISAN BEIR\n"
-                                   "[2] VCARD IMPORT\n"
-                                   "[3] CSV (adatbazis) IMPORT (mostani adatbazis filehoz iras)\n"
-                                   "");
+                            next = menu("[1] MANUALISAN BEIR\n"
+                                        "[2] VCARD IMPORT\n"
+                                        "[3] CSV (adatbazis) IMPORT (mostani adatbazis filehoz iras)");
                             next ? menulevel++ : menulevel--;
                             break;
                     case 2: // LIST EVERY ENTRY IN DB IN SHORT FORMAT (NEV, TELSZAM, EMAIL)
@@ -83,11 +101,9 @@ int mainmenu(void) {
                             break;
                     case 5: prev = next;
                             printf("Mi szerint keres?\n");
-                            next = menu(""
-                                        "[1] NEV\n"
+                            next = menu("[1] NEV\n"
                                         "[2] TELEFONSZAM\n"
-                                        "[3] EMAIL\n"
-                                        "");
+                                        "[3] EMAIL");
                             next ? menulevel++ : menulevel--;
                             break;
                     case 6:
@@ -96,7 +112,15 @@ int mainmenu(void) {
                             printf("Mi legyen a .vcf file neve?\n> ");
                             char fname[254+1];
                             scanf("%s", fname);
-                            printf("record_export_vcf(%s,%d);", fname, next);
+                            printf("vcf_export(record_show_all(db, %d), \"%s\");\n", next, fname);
+
+                            char *vcard = vcard_convert(db[next]);
+                            if (vcard == NULL)
+                                printf("Nem sikerult\n");
+                            else
+                                printf("%s", vcard);
+                            free(vcard);
+
                             printf("<%s.vcf> SIKERESEN LETREHOZVA a %d. rekordbol / NEM SIKERULT!\n", fname, next);
                             next = 0;
                             menulevel--;
@@ -134,29 +158,28 @@ int mainmenu(void) {
                         break;
 
                     case 2: // listaz
-                            next = menu("Rekord reszletes kiirasa\n");
+                            next = menu("Rekord reszletes kiirasa");
                             if (next == 0) {
                                 menulevel-=2;
                             } else {
                                 printf("record_show_all(%d); // %d. sor a db_filebol\n", next, next);
+								record_show_all(db[next]);
                             }
                             break;
                     case 3: // szerkeszt -> <record_id> -> melyik  --> 3 n 
                             id = next;
                             printf("A rekord melyik adatat?\n");
-                            next = menu(""
-                                        "[1] NEV\n"
+                            next = menu("[1] NEV\n"
                                         "[2] FOGLALKOZAS\n"
                                         "[3] CIM\n"
                                         "[4] TELEFONSZAM\n"
-                                        "[5] EMAIL\n"
-                                        "");
+                                        "[5] EMAIL");
                             menulevel-=2;
                             break;
                     case 4: // torles -> i/n --> 4 1/2
                             torol = next;
                             printf("Tenyleg szeretne torolni a %d. rekordot?\n", torol);
-                            next = menu("[1] IGEN, BIZTOS\n");
+                            next = menu("[1] IGEN, BIZTOS");
                             if (next == 1) {
                                 printf("record_delete(%d);\n", torol);
                                 menulevel--;
